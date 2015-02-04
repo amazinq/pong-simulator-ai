@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import de.szut.pongsim.ai.AILoader;
-import de.szut.pongsim.ai.User;
+import ai.AILoader;
+import ai.User;
 import de.szut.pongsim.physics.Config;
 import de.szut.pongsim.physics.Model;
 

@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import de.szut.pongsim.ai.User;
+import ai.User;
 import de.szut.pongsim.gui.Field;
 
 /**

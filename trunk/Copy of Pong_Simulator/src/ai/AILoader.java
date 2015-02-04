@@ -1,4 +1,4 @@
-package de.szut.pongsim.ai;
+package ai;
 
 import java.io.File;
 import java.net.MalformedURLException;
