@@ -17,6 +17,7 @@ import ai.AILoader;
 import ai.User;
 import de.szut.pongsim.physics.Config;
 import de.szut.pongsim.physics.Model;
+import ai.AI;
 
 /**
  * 
@@ -85,28 +86,30 @@ public class Menu extends JMenuBar {
 
 		// Left AI selection
 		menuItemLeftAiselection.addActionListener(e -> {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle(CHOOSER_TITLE);
-			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
-			fileChooser.setFileFilter(AI_FILTER);
-			int option = fileChooser.showOpenDialog(null);
-			if (option == JFileChooser.APPROVE_OPTION) {
-				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
-				model.setLeftUser(ai);
-			}
+//			JFileChooser fileChooser = new JFileChooser();
+//			fileChooser.setDialogTitle(CHOOSER_TITLE);
+//			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
+//			fileChooser.setFileFilter(AI_FILTER);
+//			int option = fileChooser.showOpenDialog(null);
+//			if (option == JFileChooser.APPROVE_OPTION) {
+//				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
+//				model.setLeftUser(ai);
+//			}
+			model.setLeftUser(new AI());
 		});
 
 		// Right AI selection
 		menuItemRightAiselection.addActionListener(e -> {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle(CHOOSER_TITLE);
-			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
-			fileChooser.setFileFilter(AI_FILTER);
-			int option = fileChooser.showOpenDialog(null);
-			if (option == JFileChooser.APPROVE_OPTION) {
-				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
-				model.setRightUser(ai);
-			}
+//			JFileChooser fileChooser = new JFileChooser();
+//			fileChooser.setDialogTitle(CHOOSER_TITLE);
+//			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
+//			fileChooser.setFileFilter(AI_FILTER);
+//			int option = fileChooser.showOpenDialog(null);
+//			if (option == JFileChooser.APPROVE_OPTION) {
+//				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
+//				model.setRightUser(ai);
+//			}
+			model.setRightUser(new AI());
 		});
 
 		Config config = model.getConfig();

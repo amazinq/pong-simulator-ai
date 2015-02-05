@@ -19,7 +19,7 @@ public interface User {
 	 * @param isDefender sagt der KI ob sie verteidigen muss
 	 * @return Die nächste Padbewegung (oben, unten oder stop)
 	 */
-	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY, Point BallPos, int BallSpeed, boolean isDefender);
+	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY, Point ballPos, int ballSpeed, boolean isDefender);
 	
 	/**
 	 * Signalisiert bei Aufruf, dass die Runde vorbei ist
