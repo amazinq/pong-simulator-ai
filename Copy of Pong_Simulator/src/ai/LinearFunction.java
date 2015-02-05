@@ -25,5 +25,9 @@ public class LinearFunction {
 	public void setB(double b) {
 		this.b = b;
 	}
+	
+	public double getF(double x) {
+		return m*x+b;
+	}
 
 }
