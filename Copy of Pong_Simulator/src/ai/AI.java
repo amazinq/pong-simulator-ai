@@ -7,52 +7,53 @@ public class AI implements User {
 
 	private Point firstBallPosition;
 	private boolean isFirstStep;
+	private boolean isLeftPlayer;
 	
 	public AI() {
 		isFirstStep = true;
 	}
 	
-	@Override
-	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY,
-			Point ballPos, int ballSpeed, boolean isDefender) {
-		
-		if(isDefender) {
-			if(isFirstStep) {
-				firstBallPosition = ballPos;
-				isFirstStep = false;
-			} else {
-				LinearFunction flightRoute = generateLinearFunction(firstBallPosition, ballPos);
-				//System.out.println(flightRoute.getM());
-				Point padCollisionPoint;
-				if(ballPos.getX() > firstBallPosition.getX()) {
-					System.out.println((Math.abs(flightRoute.getF(64)) % 120)%60);
-					if((Math.abs(flightRoute.getF(64)) % 120)%60 < ownPadBottomY+2) {
-						return PadMovement.DOWN;
-					} 
-					return PadMovement.UP;
-//					if(flightRoute.getM() > 0) {
-//						//oben
-//					} else {
-//						//unten
+//	@Override
+//	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY,
+//			Point ballPos, int ballSpeed, boolean isDefender) {
+//		
+//		if(isDefender) {
+//			if(isFirstStep) {
+//				firstBallPosition = ballPos;
+//				isFirstStep = false;
+//			} else {
+//				LinearFunction flightRoute = generateLinearFunction(firstBallPosition, ballPos);
+//				//System.out.println(flightRoute.getM());
+//				Point padCollisionPoint;
+//				if(ballPos.getX() > firstBallPosition.getX()) {
+//					System.out.println((Math.abs(flightRoute.getF(64)) % 120)%60);
+//					if((Math.abs(flightRoute.getF(64)) % 120)%60 < ownPadBottomY+2) {
+//						return PadMovement.DOWN;
+//					} 
+//					return PadMovement.UP;
+////					if(flightRoute.getM() > 0) {
+////						//oben
+////					} else {
+////						//unten
+////					}
+//				} else {
+//					System.out.println((Math.abs(flightRoute.getF(0)) % 120)%60);
+//					if((Math.abs(flightRoute.getF(0)) % 120)%60 < ownPadBottomY+2) {
+//						return PadMovement.DOWN;
 //					}
-				} else {
-					System.out.println((Math.abs(flightRoute.getF(0)) % 120)%60);
-					if((Math.abs(flightRoute.getF(0)) % 120)%60 < ownPadBottomY+2) {
-						return PadMovement.DOWN;
-					}
-					return PadMovement.UP;
-//					if(flightRoute.getM() > 0) {
-//						//unten
-//					} else {
-//						//oben
-//					}
-				}
-			}
-		} else {
-			
-		}
-		return PadMovement.STOP;
-	}
+//					return PadMovement.UP;
+////					if(flightRoute.getM() > 0) {
+////						//unten
+////					} else {
+////						//oben
+////					}
+//				}
+//			}
+//		} else {
+//			
+//		}
+//		return PadMovement.STOP;
+//	}
 
 	@Override
 	public void reset() {
@@ -64,6 +65,30 @@ public class AI implements User {
 		double m = ((double)currentBallPosition.getY() - (double)firstBallPosition.getY())/((double)currentBallPosition.getX() - (double)firstBallPosition.getX());
 		double b = (double)currentBallPosition.getY() - m * (double)currentBallPosition.getX();
 		return new LinearFunction(m,b);
+	}
+
+	@Override
+	public void setLeftSide() {
+		isLeftPlayer = true;
+		
+	}
+
+	@Override
+	public void setRightSide() {
+		isLeftPlayer = false;
+		
+	}
+
+	@Override
+	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateBallPos(Point ballPos) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

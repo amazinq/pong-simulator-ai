@@ -95,28 +95,24 @@ public class Model implements Runnable {
 		int totalDirectionToggles = 0;
 		Point startPos = board.getBallPos();
 		BallFunction func = BallFunction.createAtRandomAngle(startPos);
+		leftUser.updateBallPos(startPos);
+		rightUser.updateBallPos(startPos);
 		field.respawn(startPos);
 		// Game loop
 		while (true) {
 			// Information for pad movement
 			int leftPadBottomY = board.getLeftPadBottomY();
 			int rightPadBottomY = board.getRightPadBottomY();
-			Point currentPos = board.getBallPos();
-			boolean leftIsDefender = direction == HorizontalDirection.LEFT;
-			boolean rightIsDefender = !leftIsDefender;
-			// final copies to allow for closure reading
-			final Point currentBallPos = currentPos;
-			final int currentBallSpeed = ballSpeed;
 			// Pad movements
 			PadMovement leftMovement = getAIMovementDecision(() -> {
-				return leftUser.nextStep(leftPadBottomY, rightPadBottomY, currentBallPos, currentBallSpeed, leftIsDefender);
+				return leftUser.nextStep(leftPadBottomY, rightPadBottomY);
 			}, aiTimeoutMS);
 			if (leftMovement != null) {
 				leftMovement = board.moveLeftPad(leftMovement);
 				field.moveLeftPad(leftMovement);
 			}
 			PadMovement rightMovement = getAIMovementDecision(() -> {
-				return rightUser.nextStep(rightPadBottomY, leftPadBottomY, currentBallPos, currentBallSpeed, rightIsDefender);
+				return rightUser.nextStep(rightPadBottomY, leftPadBottomY);
 			}, aiTimeoutMS);
 			if (rightMovement != null) {
 				rightMovement = board.moveRightPad(rightMovement);
@@ -124,7 +120,7 @@ public class Model implements Runnable {
 			}
 			// Ball movements
 			for (int i = 0; i < ballSpeed; i++) {
-				currentPos = func.next(direction, currentPos);
+				Point currentPos = func.next(direction, board.getBallPos());
 				Collision collision = board.moveBall(currentPos);
 				if (collision == Collision.END) {
 					currentPos = func.next(direction, currentPos);
@@ -150,6 +146,8 @@ public class Model implements Runnable {
 						ballSpeed++;
 					}
 				}
+				leftUser.updateBallPos(currentPos);
+				rightUser.updateBallPos(currentPos);
 				field.moveBall(currentPos);
 				try {
 					Thread.sleep(movementDelayMS/ballSpeed);
@@ -213,10 +211,12 @@ public class Model implements Runnable {
 	}
 	
 	public void setLeftUser(User leftUser) {
+		leftUser.setLeftSide();
 		this.leftUser = leftUser;
 	}
 
 	public void setRightUser(User rightUser) {
+		rightUser.setRightSide();
 		this.rightUser = rightUser;
 	}
 

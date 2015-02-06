@@ -11,15 +11,28 @@ import de.szut.pongsim.physics.Point;
 public interface User {
 	
 	/**
+	 * Informiert die KI, dass sich diese auf der linken Seite des Spielfeldes befindet.
+	 */
+	public void setLeftSide();
+	
+	/**
+	 * Informiert die KI, dass sich diese auf der rechten Seite des Spielfeldes befindet.
+	 */
+	public void setRightSide();
+	
+	/**
 	 * Schnittstelle zwischen AILoader und Model
 	 * @param ownPadBottomY unterste Koordinate des eigenen Pads
 	 * @param enemyPadBottomY unterste Koordinate des gegnerischen Pads
-	 * @param BallPos momentane Ballposition
-	 * @param BallSpeed momentane Ballgeschwindigkeit
-	 * @param isDefender sagt der KI ob sie verteidigen muss
 	 * @return Die nächste Padbewegung (oben, unten oder stop)
 	 */
-	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY, Point ballPos, int ballSpeed, boolean isDefender);
+	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY);
+	
+	/**
+	 * Aktualisiert die Ballposition.
+	 * @param ballPos
+	 */
+	public void updateBallPos(Point ballPos);
 	
 	/**
 	 * Signalisiert bei Aufruf, dass die Runde vorbei ist
