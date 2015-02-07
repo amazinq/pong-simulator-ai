@@ -128,7 +128,7 @@ public class AI implements User {
 					if (flightRoute.getM() > 0) {
 						// collision top
 						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
-						while(tempFunction.getF(64) > 59) {
+						while(tempFunction.getF(63) > 59) {
 							// still collisions left
 						}
 						// no further collisions
@@ -136,7 +136,7 @@ public class AI implements User {
 					} else {
 						// collision bottom
 						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
-						while(tempFunction.getF(64) < 0) {
+						while(tempFunction.getF(63) < 0) {
 							// still collisions left
 						}
 						// no further collisions
