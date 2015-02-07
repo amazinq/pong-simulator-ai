@@ -4,18 +4,16 @@ import de.szut.pongsim.ai.User;
 import de.szut.pongsim.physics.PadMovement;
 import de.szut.pongsim.physics.Point;
 
-public class AI implements User {
+public class AI_alt implements User {
 
 	private Point firstBallPosition;
 	private boolean isFirstStep;
 	private boolean isLeftPlayer;
-	private boolean alreadyCollided;
 	private Point padCollisionPoint;
 
-	public AI() {
+	public AI_alt() {
 		isFirstStep = true;
-		alreadyCollided = false;
-		padCollisionPoint = new Point(0, 27);
+		padCollisionPoint = new Point(0,27);
 	}
 
 	// @Override
@@ -82,9 +80,9 @@ public class AI implements User {
 
 	@Override
 	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY) {
-		if (padCollisionPoint.getY() < ownPadBottomY + 1) {
+		if(padCollisionPoint.getY() < ownPadBottomY+2) {
 			return PadMovement.DOWN;
-		} else if (padCollisionPoint.getY() > ownPadBottomY + 1) {
+		} else if(padCollisionPoint.getY() > ownPadBottomY+2) {
 			return PadMovement.UP;
 		}
 		return PadMovement.STOP;
@@ -97,49 +95,62 @@ public class AI implements User {
 			firstBallPosition = ballPos;
 			isFirstStep = false;
 		} else {
-			if (collisionDetected(ballPos)) {
-				isFirstStep = true;
-			} else {
-				LinearFunction flightRoute = generateLinearFunction(
-						firstBallPosition, ballPos);
-				if (isLeftPlayer) {
-					// is left player
-					if (ballPos.getX() < firstBallPosition.getX()) {
-						// is defender
-						double functionLength = flightRoute.getF(1);
-						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
-							padCollisionPoint = new Point(0,
-									60 - Math.abs((int) functionLength % 60));
-						} else {
-							padCollisionPoint = new Point(0,
-									Math.abs((int) functionLength % 60));
+			LinearFunction flightRoute = generateLinearFunction(
+					firstBallPosition, ballPos);
+			if (isLeftPlayer) {
+				// is left player
+				if (ballPos.getX() < firstBallPosition.getX()) {
+					// is defender
+					if (flightRoute.getM() > 0) {
+						// collision bottom
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(1) < 0) {
+							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(0,(int)(tempFunction.getF(1)+0.5));
 					} else {
-						// is not defender
-						padCollisionPoint = new Point(0, 27);
+						// collision top
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(1) > 59) {
+							// still collisions left
+						}
+						// no further collisions
+						padCollisionPoint = new Point(0,(int)(tempFunction.getF(1)+0.5));
 					}
 				} else {
-					// is right player
-					if (ballPos.getX() > firstBallPosition.getX()) {
-						// is defender
-						double functionLength = flightRoute.getF(63);
-						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
-							padCollisionPoint = new Point(63,
-									60 - Math.abs((int) functionLength % 60));
-						} else {
-							padCollisionPoint = new Point(63,
-									Math.abs((int) functionLength % 60));
+					// is not defender
+					padCollisionPoint = new Point(0,27);
+				}
+			} else {
+				// is right player
+				if (ballPos.getX() > firstBallPosition.getX()) {
+					// is defender
+					if (flightRoute.getM() > 0) {
+						// collision top
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(63) > 59) {
+							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(64,(int)(tempFunction.getF(63)+0.5));
 					} else {
-						// is not defender
-						padCollisionPoint = new Point(63, 27);
+						// collision bottom
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(63) < 0) {
+							// still collisions left
+						}
+						// no further collisions
+						padCollisionPoint = new Point(64,(int)(tempFunction.getF(63)+0.5));
 					}
+				} else {
+					// is not defender
 				}
 			}
 		}
 	}
 
-	private LinearFunction generateLinearFunction(
+	private static LinearFunction generateLinearFunction(
 			Point firstBallPosition, Point currentBallPosition) {
 		double m = ((double) currentBallPosition.getY() - (double) firstBallPosition
 				.getY())
@@ -148,23 +159,5 @@ public class AI implements User {
 		double b = (double) currentBallPosition.getY() - m
 				* (double) currentBallPosition.getX();
 		return new LinearFunction(m, b);
-	}
-
-	private int calculateAmountOfCollisions(double functionLength) {
-		if (functionLength < 0 && functionLength / 60 > -1 && functionLength / 60 < -2) {
-			return (int) (functionLength / 60) + 1;
-		}
-		return (int) functionLength / 60;
-	}
-	
-	private boolean collisionDetected(Point currentBallPosition) {
-		if((currentBallPosition.getX() == 1 || currentBallPosition.getX() == 63 || currentBallPosition.getY() == 0 || currentBallPosition.getY() == 59) && !alreadyCollided) {
-			alreadyCollided = true;
-			return true;
-		}
-		if(currentBallPosition.getY() > 0 && currentBallPosition.getY() < 59) {
-			alreadyCollided = false;
-		}
-		return false;
 	}
 }

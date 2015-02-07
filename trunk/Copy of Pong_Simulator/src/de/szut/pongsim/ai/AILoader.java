@@ -1,11 +1,9 @@
-package ai;
+package de.szut.pongsim.ai;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import de.szut.pongsim.ai.User;
 
 /**
  * Lädt KI Klassen während der Runtime in das Programm und ermöglicht das wechseln der KIs zur Runtime
