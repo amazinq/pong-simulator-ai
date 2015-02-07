@@ -1,11 +1,9 @@
 package de.szut.pongsim.gui;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -13,11 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import ai.AI;
 import ai.AILoader;
-import ai.User;
 import de.szut.pongsim.physics.Config;
 import de.szut.pongsim.physics.Model;
-import ai.AI;
 
 /**
  * 

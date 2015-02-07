@@ -1,4 +1,4 @@
-package ai;
+package de.szut.pongsim.ai;
 
 import de.szut.pongsim.physics.PadMovement;
 import de.szut.pongsim.physics.Point;
