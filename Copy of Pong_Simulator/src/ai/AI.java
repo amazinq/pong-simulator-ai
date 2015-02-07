@@ -102,20 +102,20 @@ public class AI implements User {
 					// is defender
 					if (flightRoute.getM() > 0) {
 						// collision bottom
-						if(flightRoute.getF(1) >= 0) {
-							// no further collisions
-							padCollisionPoint = new Point(0,(int)(flightRoute.getF(1)+0.5));
-						} else {
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(1) < 0) {
 							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(0,(int)(tempFunction.getF(1)+0.5));
 					} else {
 						// collision top
-						if(flightRoute.getF(1) <= 59) {
-							// no further collisions
-							padCollisionPoint = new Point(0,(int)(flightRoute.getF(1)+0.5));
-						} else {
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(1) > 59) {
 							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(0,(int)(tempFunction.getF(1)+0.5));
 					}
 				} else {
 					// is not defender
@@ -127,20 +127,20 @@ public class AI implements User {
 					// is defender
 					if (flightRoute.getM() > 0) {
 						// collision top
-						if(flightRoute.getF(63) <= 59) {
-							// no further collisions
-							padCollisionPoint = new Point(64,(int)(flightRoute.getF(63)+0.5));
-						} else {
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(64) > 59) {
 							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(64,(int)(tempFunction.getF(63)+0.5));
 					} else {
 						// collision bottom
-						if(flightRoute.getF(63) >= 0) {
-							// no further collisions
-							padCollisionPoint = new Point(64,(int)(flightRoute.getF(63)+0.5));
-						} else {
+						LinearFunction tempFunction = new LinearFunction(flightRoute.getM(), flightRoute.getB());
+						while(tempFunction.getF(64) < 0) {
 							// still collisions left
 						}
+						// no further collisions
+						padCollisionPoint = new Point(64,(int)(tempFunction.getF(63)+0.5));
 					}
 				} else {
 					// is not defender
