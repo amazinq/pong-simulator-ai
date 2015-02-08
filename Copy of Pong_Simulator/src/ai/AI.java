@@ -11,6 +11,9 @@ public class AI implements User {
 	private boolean isLeftPlayer;
 	private boolean alreadyCollided;
 	private Point padCollisionPoint;
+	
+	private static final int FIELD_WIDTH = 65;
+	private static final int FIELD_HEIGHT = 60;
 
 	public AI() {
 		isFirstStep = true;
@@ -32,8 +35,8 @@ public class AI implements User {
 	// //System.out.println(flightRoute.getM());
 	//
 	// if(ballPos.getX() > firstBallPosition.getX()) {
-	// System.out.println((Math.abs(flightRoute.getF(64)) % 120)%60);
-	// if((Math.abs(flightRoute.getF(64)) % 120)%60 < ownPadBottomY+2) {
+	// System.out.println((Math.abs(flightRoute.getF(64)) % 120)%FIELD_HEIGHT);
+	// if((Math.abs(flightRoute.getF(64)) % 120)%FIELD_HEIGHT < ownPadBottomY+2) {
 	// return PadMovement.DOWN;
 	// }
 	// return PadMovement.UP;
@@ -43,8 +46,8 @@ public class AI implements User {
 	// // //unten
 	// // }
 	// } else {
-	// System.out.println((Math.abs(flightRoute.getF(0)) % 120)%60);
-	// if((Math.abs(flightRoute.getF(0)) % 120)%60 < ownPadBottomY+2) {
+	// System.out.println((Math.abs(flightRoute.getF(0)) % 120)%FIELD_HEIGHT);
+	// if((Math.abs(flightRoute.getF(0)) % 120)%FIELD_HEIGHT < ownPadBottomY+2) {
 	// return PadMovement.DOWN;
 	// }
 	// return PadMovement.UP;
@@ -84,7 +87,7 @@ public class AI implements User {
 	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY) {
 		if (padCollisionPoint.getY() < ownPadBottomY + 1) {
 			return PadMovement.DOWN;
-		} else if (padCollisionPoint.getY() > ownPadBottomY + 1) {
+		} else if (padCollisionPoint.getY() > ownPadBottomY + 4) {
 			return PadMovement.UP;
 		}
 		return PadMovement.STOP;
@@ -109,10 +112,10 @@ public class AI implements User {
 						double functionLength = flightRoute.getF(1);
 						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
 							padCollisionPoint = new Point(0,
-									60 - Math.abs((int) functionLength % 60));
+									FIELD_HEIGHT - Math.abs((int) functionLength % FIELD_HEIGHT));
 						} else {
 							padCollisionPoint = new Point(0,
-									Math.abs((int) functionLength % 60));
+									Math.abs((int) functionLength % FIELD_HEIGHT));
 						}
 					} else {
 						// is not defender
@@ -122,17 +125,17 @@ public class AI implements User {
 					// is right player
 					if (ballPos.getX() > firstBallPosition.getX()) {
 						// is defender
-						double functionLength = flightRoute.getF(63);
+						double functionLength = flightRoute.getF(FIELD_WIDTH -2);
 						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
-							padCollisionPoint = new Point(63,
-									60 - Math.abs((int) functionLength % 60));
+							padCollisionPoint = new Point(FIELD_WIDTH -2,
+									FIELD_HEIGHT - Math.abs((int) functionLength % FIELD_HEIGHT));
 						} else {
-							padCollisionPoint = new Point(63,
-									Math.abs((int) functionLength % 60));
+							padCollisionPoint = new Point(FIELD_WIDTH -2,
+									Math.abs((int) functionLength % FIELD_HEIGHT));
 						}
 					} else {
 						// is not defender
-						padCollisionPoint = new Point(63, 27);
+						padCollisionPoint = new Point(FIELD_WIDTH -2, 27);
 					}
 				}
 			}
@@ -151,10 +154,10 @@ public class AI implements User {
 	}
 
 	private int calculateAmountOfCollisions(double functionLength) {
-		if (functionLength < 0 && functionLength / 60 > -1 && functionLength / 60 < -2) {
-			return (int) (functionLength / 60) + 1;
+		if (functionLength < 0 && functionLength / FIELD_HEIGHT > -1 && functionLength / FIELD_HEIGHT < -2) {
+			return (int) (functionLength / FIELD_HEIGHT) + 1;
 		}
-		return (int) functionLength / 60;
+		return (int) functionLength / FIELD_HEIGHT;
 	}
 	
 	private boolean collisionDetected(Point currentBallPosition) {
