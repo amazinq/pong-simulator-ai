@@ -1,9 +1,11 @@
 package de.szut.pongsim.gui;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -11,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ai.AI;
 import ai.AILoader;
+import de.szut.pongsim.ai.User;
 import de.szut.pongsim.physics.Config;
 import de.szut.pongsim.physics.Model;
 
@@ -83,30 +85,28 @@ public class Menu extends JMenuBar {
 
 		// Left AI selection
 		menuItemLeftAiselection.addActionListener(e -> {
-//			JFileChooser fileChooser = new JFileChooser();
-//			fileChooser.setDialogTitle(CHOOSER_TITLE);
-//			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
-//			fileChooser.setFileFilter(AI_FILTER);
-//			int option = fileChooser.showOpenDialog(null);
-//			if (option == JFileChooser.APPROVE_OPTION) {
-//				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
-//				model.setLeftUser(ai);
-//			}
-			model.setLeftUser(new AI());
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle(CHOOSER_TITLE);
+			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
+			fileChooser.setFileFilter(AI_FILTER);
+			int option = fileChooser.showOpenDialog(null);
+			if (option == JFileChooser.APPROVE_OPTION) {
+				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
+				model.setLeftUser(ai);
+			}
 		});
 
 		// Right AI selection
 		menuItemRightAiselection.addActionListener(e -> {
-//			JFileChooser fileChooser = new JFileChooser();
-//			fileChooser.setDialogTitle(CHOOSER_TITLE);
-//			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
-//			fileChooser.setFileFilter(AI_FILTER);
-//			int option = fileChooser.showOpenDialog(null);
-//			if (option == JFileChooser.APPROVE_OPTION) {
-//				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
-//				model.setRightUser(ai);
-//			}
-			model.setRightUser(new AI());
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle(CHOOSER_TITLE);
+			fileChooser.setCurrentDirectory(new File(AI_FOLDER));
+			fileChooser.setFileFilter(AI_FILTER);
+			int option = fileChooser.showOpenDialog(null);
+			if (option == JFileChooser.APPROVE_OPTION) {
+				User ai = aiLoader.loadClassObject(fileChooser.getSelectedFile());
+				model.setRightUser(ai);
+			}
 		});
 
 		Config config = model.getConfig();
