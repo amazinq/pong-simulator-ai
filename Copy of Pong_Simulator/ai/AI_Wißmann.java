@@ -4,7 +4,12 @@ import de.szut.pongsim.ai.User;
 import de.szut.pongsim.physics.PadMovement;
 import de.szut.pongsim.physics.Point;
 
-public class AI implements User {
+/**
+ * AI placed as a player in the pong simulator
+ * @author Steffen Wißmann
+ *
+ */
+public class AI_Wißmann implements User {
 
 	private Point firstBallPosition;
 	private boolean isFirstStep;
@@ -15,54 +20,11 @@ public class AI implements User {
 	private static final int FIELD_WIDTH = 65;
 	private static final int FIELD_HEIGHT = 60;
 
-	public AI() {
+	public AI_Wißmann() {
 		isFirstStep = true;
 		alreadyCollided = false;
 		padCollisionPoint = new Point(0, 27);
 	}
-
-	// @Override
-	// public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY,
-	// Point ballPos, int ballSpeed, boolean isDefender) {
-	//
-	// if(isDefender) {
-	// if(isFirstStep) {
-	// firstBallPosition = ballPos;
-	// isFirstStep = false;
-	// } else {
-	// LinearFunction flightRoute = generateLinearFunction(firstBallPosition,
-	// ballPos);
-	// //System.out.println(flightRoute.getM());
-	//
-	// if(ballPos.getX() > firstBallPosition.getX()) {
-	// System.out.println((Math.abs(flightRoute.getF(64)) % 120)%FIELD_HEIGHT);
-	// if((Math.abs(flightRoute.getF(64)) % 120)%FIELD_HEIGHT < ownPadBottomY+2) {
-	// return PadMovement.DOWN;
-	// }
-	// return PadMovement.UP;
-	// // if(flightRoute.getM() > 0) {
-	// // //oben
-	// // } else {
-	// // //unten
-	// // }
-	// } else {
-	// System.out.println((Math.abs(flightRoute.getF(0)) % 120)%FIELD_HEIGHT);
-	// if((Math.abs(flightRoute.getF(0)) % 120)%FIELD_HEIGHT < ownPadBottomY+2) {
-	// return PadMovement.DOWN;
-	// }
-	// return PadMovement.UP;
-	// // if(flightRoute.getM() > 0) {
-	// // //unten
-	// // } else {
-	// // //oben
-	// // }
-	// }
-	// }
-	// } else {
-	//
-	// }
-	// return PadMovement.STOP;
-	// }
 
 	@Override
 	public void reset() {
@@ -83,6 +45,13 @@ public class AI implements User {
 
 	}
 
+
+	/**
+	 * inteface between the AI and model
+	 * @param ownPadBottomY lowest point of your own gamepad
+	 * @param enemyPadBottomY lowest point of the enemys gamepad
+	 * @return next padmovement (UP, DOWN, STOP)
+	 */
 	@Override
 	public PadMovement nextStep(int ownPadBottomY, int enemyPadBottomY) {
 		if (padCollisionPoint.getY() < ownPadBottomY + 1) {
@@ -93,48 +62,60 @@ public class AI implements User {
 		return PadMovement.STOP;
 	}
 
-	// Padcollision beachten! firstpoint zurücksetzen!
+	/**
+	 * method updates the ballposition
+	 * and also calculates the next
+	 * padcollision -> route prediction
+	 * @param ballPos current ballposition
+	 */
 	@Override
 	public void updateBallPos(Point ballPos) {
 		if (isFirstStep) {
+			// resets the current calculation
+			// after each collision
 			firstBallPosition = ballPos;
 			isFirstStep = false;
 		} else {
 			if (collisionDetected(ballPos)) {
 				isFirstStep = true;
 			} else {
+				// calculates flightroute
 				LinearFunction flightRoute = generateLinearFunction(
 						firstBallPosition, ballPos);
 				if (isLeftPlayer) {
 					// is left player
 					if (ballPos.getX() < firstBallPosition.getX()) {
 						// is defender
-						double functionLength = flightRoute.getF(1);
-						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
+						double y = flightRoute.getY(1);
+						// calculates the final point of collision
+						if (calculateAmountOfCollisions(y) % 2 == 1) {
 							padCollisionPoint = new Point(0,
-									FIELD_HEIGHT - Math.abs((int) functionLength % FIELD_HEIGHT));
+									FIELD_HEIGHT - Math.abs((int) y % FIELD_HEIGHT));
 						} else {
 							padCollisionPoint = new Point(0,
-									Math.abs((int) functionLength % FIELD_HEIGHT));
+									Math.abs((int) y % FIELD_HEIGHT));
 						}
 					} else {
 						// is not defender
+						// moves the pad to the mid if hes not defender
 						padCollisionPoint = new Point(0, 27);
 					}
 				} else {
 					// is right player
 					if (ballPos.getX() > firstBallPosition.getX()) {
 						// is defender
-						double functionLength = flightRoute.getF(FIELD_WIDTH -2);
-						if (calculateAmountOfCollisions(functionLength) % 2 == 1) {
+						double y = flightRoute.getY(FIELD_WIDTH -2);
+						// calculates the final point of collision
+						if (calculateAmountOfCollisions(y) % 2 == 1) {
 							padCollisionPoint = new Point(FIELD_WIDTH -2,
-									FIELD_HEIGHT - Math.abs((int) functionLength % FIELD_HEIGHT));
+									FIELD_HEIGHT - Math.abs((int) y % FIELD_HEIGHT));
 						} else {
 							padCollisionPoint = new Point(FIELD_WIDTH -2,
-									Math.abs((int) functionLength % FIELD_HEIGHT));
+									Math.abs((int) y % FIELD_HEIGHT));
 						}
 					} else {
 						// is not defender
+						// moves the pad to the mid if hes not defender
 						padCollisionPoint = new Point(FIELD_WIDTH -2, 27);
 					}
 				}
@@ -142,6 +123,12 @@ public class AI implements User {
 		}
 	}
 
+	/**
+	 * Generates a linear function by using 2 points
+	 * @param firstBallPosition first position after a collision
+	 * @param currentBallPosition current ballposition
+	 * @return linearfunction reperesents a linear function
+	 */
 	private LinearFunction generateLinearFunction(
 			Point firstBallPosition, Point currentBallPosition) {
 		double m = ((double) currentBallPosition.getY() - (double) firstBallPosition
@@ -153,14 +140,31 @@ public class AI implements User {
 		return new LinearFunction(m, b);
 	}
 
-	private int calculateAmountOfCollisions(double functionLength) {
-		if (functionLength < 0 && functionLength / FIELD_HEIGHT > -1 && functionLength / FIELD_HEIGHT < -2) {
-			return (int) (functionLength / FIELD_HEIGHT) + 1;
+	/**
+	 * calculates the amount of collisions by
+	 * dividing the actual y value with the
+	 * field height
+	 * if the y value is negative, another collision
+	 * needs to be added
+	 * at the bottom and top of the gamefield
+	 * @param y represents the f(x) value 
+	 * @return amount of collisions 
+	 */
+	private int calculateAmountOfCollisions(double y) {
+		if (y < 0 && y / FIELD_HEIGHT > -1 && y / FIELD_HEIGHT < -2) {
+			return (int) (y / FIELD_HEIGHT) + 1;
 		}
-		return (int) functionLength / FIELD_HEIGHT;
+		return (int) y / FIELD_HEIGHT;
 	}
-	
+	/**
+	 * detects collisions
+	 * @param currentBallPosition current ball position
+	 * @return boolean whether a collision has been detected or not
+	 */
 	private boolean collisionDetected(Point currentBallPosition) {
+		// alreadycollided is necessary because the ball might 
+		// be at y = 0 or y = 59 for 2 or even more consecutive steps
+		// this would result in a double detected collision which causes fatal errors
 		if((currentBallPosition.getX() == 1 || currentBallPosition.getX() == 63 || currentBallPosition.getY() == 0 || currentBallPosition.getY() == 59) && !alreadyCollided) {
 			alreadyCollided = true;
 			return true;
